@@ -88,7 +88,7 @@ async def logs(
 ):
     user = searches(name=name, age=age)
     if user:
-        return templates.TemplateResponse("glava.html", {
+        return templates.TemplateResponse("skaski.html", {
             "request": request,
             "user": user
         })
