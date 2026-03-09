@@ -35,16 +35,16 @@ async def create_user(
             "message": f"Пользователь {name} успешно создан!"
     })
 
-@app.get("/delete_user")  # Изменено с @app.delete на @app.get
+@app.get("/delete_user")
 async def delete_users(request: Request):
     return templates.TemplateResponse("delete.html", {
         "request": request,
-        "users": users  # Передаем список пользователей для удаления
+        "users": users
     })
 
 @app.post("/delete")
 async def delete_user(
-    id_user: int = Form(...)  # Используем Form
+    id_user: int = Form(...)
 ):
     delete(id_user)
     return {"message": "пользователь удалён"}
@@ -55,17 +55,42 @@ async def login(request: Request):
         "request": request
     })
 
+@app.get("/logins")
+async def logins(request: Request):
+    return templates.TemplateResponse("logins.html", {
+        "request": request
+    })
+
 @app.get("/log")
 async def log(
     request: Request,
-    name: str,  # Эти параметры будут из query string
+    name: str,
     age: int
 ):
     user = searches(name=name, age=age)
     if user:
         return templates.TemplateResponse("glava.html", {
             "request": request,
-            "user": user  # Передаем пользователя в шаблон
+            "user": user
+        })
+    else:
+        return templates.TemplateResponse("error.html", {
+            "request": request,
+            "error": "Пользователь не найден"
+        })
+
+
+@app.get("/logs")
+async def logs(
+    request: Request,
+    name: str,
+    age: int
+):
+    user = searches(name=name, age=age)
+    if user:
+        return templates.TemplateResponse("glava.html", {
+            "request": request,
+            "user": user
         })
     else:
         return templates.TemplateResponse("error.html", {

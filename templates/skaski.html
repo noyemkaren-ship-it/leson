@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя сказка</title>
+    <style>
+        /* Общие стили страницы */
+        body {
+            background: linear-gradient(145deg, #f9f3e6 0%, #ffe6c9 100%);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Контейнер — как страница книги */
+        .story-page {
+            max-width: 800px;
+            width: 100%;
+            background: #fffcf6;
+            padding: 40px 50px;
+            border-radius: 20px 8px 20px 8px;
+            box-shadow:
+                0 20px 35px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px #f0d5b0,
+                inset 0 0 20px #ffe9d0;
+            border: 1px solid #cbad7e;
+            position: relative;
+        }
+
+        /* Декоративные линии как в старых книгах */
+        .story-page::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            right: 30px;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #c0a16b, #c0a16b 5px, transparent 5px, transparent 15px);
+        }
+
+        .story-page::after {
+            content: '';
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            right: 30px;
+            height: 2px;
+            background: repeating-linear-gradient(90deg, #c0a16b, #c0a16b 5px, transparent 5px, transparent 15px);
+        }
+
+        /* Стиль для заголовка */
+        .story-title {
+            font-size: 2.5em;
+            color: #3b2b1a;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 0 #e2c7a9;
+            letter-spacing: 1px;
+            border-bottom: 2px dashed #cbad7e;
+            padding-bottom: 15px;
+            font-family: 'Book Antiqua', 'Georgia', serif;
+        }
+
+        /* Блок для текста сказки */
+        .story-text {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: #2c1e0f;
+            text-align: justify;
+            white-space: pre-wrap;     /* Сохраняет переносы строк */
+            word-wrap: break-word;      /* Переносит длинные слова */
+            margin-bottom: 20px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: rgba(255, 245, 230, 0.7);
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: inset 0 0 10px rgba(150, 100, 50, 0.1);
+            border-left: 3px solid #c7a87b;
+            min-height: 200px; /* Чтобы пустой блок не схлопывался */
+        }
+
+        /* Украшение — буквица (первая буква) */
+        .story-text::first-letter {
+            font-size: 3.2em;
+            color: #7a4f2b;
+            font-weight: bold;
+            float: left;
+            line-height: 0.8;
+            margin-right: 10px;
+            font-family: 'Times New Roman', serif;
+            text-shadow: 1px 1px 2px #dbb586;
+        }
+
+        /* Подпись или дата (по желанию) */
+        .story-footer {
+            text-align: right;
+            font-style: italic;
+            color: #8b6f4c;
+            border-top: 1px dotted #cbad7e;
+            padding-top: 15px;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Адаптивность для мобильных */
+        @media (max-width: 600px) {
+            .story-page {
+                padding: 25px 20px;
+            }
+            .story-title {
+                font-size: 2em;
+            }
+            .story-text {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+        }
+
+        /* Просто для красоты: эффект состаренной бумаги */
+        .story-text p {
+            margin: 0 0 0.8em 0;
+        }
+        .story-text p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="story-page">
+        <h1 class="story-title">☦️ История свещенная о грешнике Иаков ☦️</h1>
+        <div class="story-text">
+            <p>Был Иаков грешником, грешил постоянно, но нечего поделать не мог
+            уж такой он понатуре,а при входе в церковь его всегда тошнила.
+            К слову говоря его постоянно мучали мысли,а том что он грешен
+            и ему уже нечего не исправят, но больше всего ему было стыдно
+            беред господом.Однажды священик ему сказал если не можешь избавиться
+            от искушении к грехам твоим то помолись матери святой богородице
+            .Матерь святой богородице это икона на которой изображён Иисус
+            с Марией.Он начал каждый день ей молится и снова и снова
+            идти по бабам.Но однаждый когда он снова извинился он заметил,
+            что икона от него отвернулась, а у Иисуса появились следы
+            от гвоздей на руках и на вид как будто его снова распяли!
+            Он подошёл к Марии (иконе) и спросил чего же она плачет и отвернулась
+            ,а она ему ответила что из-за его грехов Иисуса снова и снова
+            распятятует и поэтому я и плачу и считаю тебя не исправимым
+            тогда он извинлися перед нею и сказал прости я так больше не буду
+            А она уже рыдая во вес голос говорит что из-за вас грешников
+            моего сына каждый раз распятят, тогда грешник Иоан заплакал и начал
+            простить прощение и попросил у неё чтобы господи помог ему пересать грешить
+            и тогда маленьки Иисус сказал хорошо, а с этого момента
+            то о дело которое тебе стыдно просить чтобы отец мой тебе
+            помог не делай и не греши больше!
+            И после этого Иоан перестал грешить!</p>
+        </div>
+        <div class="story-footer">
+            ✨ Выходит как то так, а ты помни и не грещи!... ✨
+        </div>
+    </div>
+</body>
+</html>
