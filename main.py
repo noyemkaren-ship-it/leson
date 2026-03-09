@@ -24,13 +24,14 @@ async def create_users(request: Request):
 
 @app.post("/create")
 async def create_user(
+    request: Request,
     name: str = Form(...),
     age: int = Form(...)
 ):
     create(name=name, age=age)
     return templates.TemplateResponse(
         "create.html", {
-            "request": Request,
+            "request": request,
             "message": f"Пользователь {name} успешно создан!"
     })
 
