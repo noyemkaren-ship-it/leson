@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ Title }} | Управление пользователями</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Стили для пароля */
+        .password-protection {
+            padding: 30px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+
+        .password-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: lockPulse 2s infinite;
+        }
+
+        @keyframes lockPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .password-title {
+            font-size: 1.5em;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .password-subtitle {
+            color: #718096;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+
+        .password-input-group {
+            max-width: 300px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .password-input-group input {
+            width: 100%;
+            padding: 15px 45px 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: white;
+            letter-spacing: 2px;
+        }
+
+        .password-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-input-group input::placeholder {
+            color: #cbd5e0;
+            letter-spacing: normal;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #718096;
+            font-size: 1.2em;
+            user-select: none;
+        }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+        .password-hint {
+            color: #a0aec0;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        .password-hint i {
+            font-style: normal;
+            background: #edf2f7;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: 5px;
+            font-family: monospace;
+            font-size: 1.1em;
+            color: #4a5568;
+        }
+
+        .password-error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        .password-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            margin-top: 10px;
+        }
+
+        .password-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .password-button:active {
+            transform: translateY(-1px);
+        }
+
+        .users-list {
+            padding: 30px;
+            background: #f8f9fa;
+            display: none;
+        }
+
+        .users-list.show {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+            animation: slideInCard 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .user-card:hover {
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+            border-left-color: #764ba2;
+        }
+
+        @keyframes slideInCard {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Задержки анимации для каждого элемента */
+        .user-card:nth-child(1) { animation-delay: 0.1s; }
+        .user-card:nth-child(2) { animation-delay: 0.2s; }
+        .user-card:nth-child(3) { animation-delay: 0.3s; }
+        .user-card:nth-child(4) { animation-delay: 0.4s; }
+        .user-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            box-shadow: 0 5px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .user-age {
+            font-size: 0.9em;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .user-age i {
+            font-style: normal;
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        .user-badge {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            box-shadow: 0 3px 8px rgba(72, 187, 120, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            fill: #cbd5e0;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+        }
+
+        .stats {
+            background: white;
+            padding: 20px 30px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            display: none;
+        }
+
+        .stats.show {
+            display: flex;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Индикатор попыток */
+        .attempts-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .attempt-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .attempt-dot.active {
+            background: #48bb78;
+            animation: pulse 1s infinite;
+        }
+
+        .attempt-dot.error {
+            background: #f56565;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .user-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .user-badge {
+                align-self: flex-start;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .nav-links a {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 {{ Title }}</h1>
+            <div class="nav-links">
+                <a href="create_user">📝 Регистрация</a>
+                <a href="/login">🎓 Основной сайт</a>
+            </div>
+            <p>Список зарегистрированных пользователей</p>
+        </div>
+
+        <!-- Блок ввода пароля -->
+        <div class="password-protection" id="passwordBlock">
+            <div class="password-icon">🔒</div>
+            <h2 class="password-title">Защищённая область</h2>
+            <p class="password-subtitle">Введите пароль для просмотра списка пользователей</p>
+
+            <div class="password-input-group">
+                <input type="password" id="passwordInput" placeholder="Введите пароль" maxlength="8" inputmode="numeric" pattern="\d*">
+                <span class="password-toggle" onclick="togglePassword()">👁️</span>
+            </div>
+
+            <div class="password-hint">
+                Подсказка: пароль состоит из 8 цифр <i>****</i>
+            </div>
+
+            <div class="attempts-indicator" id="attemptsIndicator">
+                <span class="attempt-dot"></span>
+                <span class="attempt-dot"></span>
+                <span class="attempt-dot"></span>
+            </div>
+
+            <div class="password-error" id="passwordError">
+                ❌ Неверный пароль! Осталось попыток: <span id="attemptsLeft">3</span>
+            </div>
+
+            <button class="password-button" onclick="checkPassword()">
+                🔓 Открыть доступ
+            </button>
+        </div>
+
+        <!-- Список пользователей (скрыт по умолчанию) -->
+        <div class="users-list" id="usersList">
+            {% if users %}
+                {% for user in users %}
+                <div class="user-card">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            {{ user.name[0] }}
+                        </div>
+                        <div class="user-details">
+                            <span class="user-name">{{ user.name }}</span>
+                            <span class="user-age">
+                                🎂 {{ user.age }} лет
+                                {% if user.age < 18 %}
+                                    <i>молодой специалист</i>
+                                {% elif user.age < 30 %}
+                                    <i>начинающий</i>
+                                {% elif user.age < 50 %}
+                                    <i>опытный</i>
+                                {% else %}
+                                    <i>эксперт</i>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="user-badge">
+                        ID: {{ loop.index }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" width="80" height="80">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                    <p>Пока нет пользователей</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Статистика (скрыта по умолчанию) -->
+        {% if users %}
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-value">{{ users|length }}</div>
+                <div class="stat-label">Всего</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">
+                    {% set avg = users|map(attribute='age')|sum / users|length %}
+                    {{ "%.1f"|format(avg) }}
+                </div>
+                <div class="stat-label">Ср. возраст</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">
+                    {% set ages = users|map(attribute='age')|list %}
+                    {{ ages|max }}
+                </div>
+                <div class="stat-label">Макс. возраст</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Правильный пароль
+        const CORRECT_PASSWORD = "20212828";
+
+        // Переменные для отслеживания попыток
+        let attempts = 3;
+        let isLocked = false;
+
+        // Функция проверки пароля
+        function checkPassword() {
+            if (isLocked) {
+                showError("Слишком много попыток! Перезагрузите страницу.");
+                return;
+            }
+
+            const passwordInput = document.getElementById('passwordInput');
+            const password = passwordInput.value.trim();
+
+            // Проверяем, что введены только цифры
+            if (!/^\d+$/.test(password)) {
+                showError("Пароль должен содержать только цифры!");
+                passwordInput.classList.add('shake');
+                setTimeout(() => passwordInput.classList.remove('shake'), 500);
+                return;
+            }
+
+            if (password === CORRECT_PASSWORD) {
+                // Правильный пароль
+                successAccess();
+            } else {
+                // Неправильный пароль
+                attempts--;
+
+                if (attempts <= 0) {
+                    isLocked = true;
+                    showError("Доступ заблокирован! Перезагрузите страницу.");
+                    document.getElementById('passwordButton').disabled = true;
+                } else {
+                    showError(`Неверный пароль! Осталось попыток: ${attempts}`);
+                }
+
+                // Обновляем индикатор попыток
+                updateAttemptsIndicator(attempts);
+
+                // Анимация ошибки
+                passwordInput.classList.add('shake');
+                setTimeout(() => passwordInput.classList.remove('shake'), 500);
+            }
+        }
+
+        // Функция успешного доступа
+        function successAccess() {
+            // Скрываем блок пароля
+            document.getElementById('passwordBlock').style.display = 'none';
+
+            // Показываем список пользователей
+            document.getElementById('usersList').classList.add('show');
+
+            // Показываем статистику
+            const stats = document.getElementById('stats');
+            if (stats) {
+                stats.classList.add('show');
+            }
+
+            // Сохраняем в localStorage, что доступ получен
+            localStorage.setItem('users_access_granted', 'true');
+
+            // Показываем уведомление
+            showNotification('✅ Доступ разрешён! Добро пожаловать!');
+        }
+
+        // Функция показа ошибки
+        function showError(message) {
+            const errorDiv = document.getElementById('passwordError');
+            const attemptsSpan = document.getElementById('attemptsLeft');
+
+            attemptsSpan.textContent = attempts;
+            errorDiv.innerHTML = `❌ ${message}`;
+            errorDiv.classList.add('show');
+
+            // Автоматически скрываем через 3 секунды
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 3000);
+        }
+
+        // Функция показа уведомления
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Обновление индикатора попыток
+        function updateAttemptsIndicator(attemptsLeft) {
+            const dots = document.querySelectorAll('.attempt-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active', 'error');
+                if (index < attemptsLeft) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.add('error');
+                }
+            });
+        }
+
+        // Переключение видимости пароля
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const toggle = document.querySelector('.password-toggle');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🔒';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+
+        // Проверка при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, был ли уже получен доступ
+            const accessGranted = localStorage.getItem('users_access_granted');
+
+            if (accessGranted === 'true') {
+                // Если доступ уже был, показываем список сразу
+                document.getElementById('passwordBlock').style.display = 'none';
+                document.getElementById('usersList').classList.add('show');
+                const stats = document.getElementById('stats');
+                if (stats) {
+                    stats.classList.add('show');
+                }
+            }
+
+            // Ограничиваем ввод только цифрами
+            const passwordInput = document.getElementById('passwordInput');
+            passwordInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            // Поддержка Enter
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+
+            // Фокус на поле ввода
+            passwordInput.focus();
+
+            // Инициализация индикатора попыток
+            updateAttemptsIndicator(3);
+        });
+
+        // Очистка localStorage при закрытии (опционально)
+        window.addEventListener('beforeunload', function() {
+            // Можно закомментировать, если нужно сохранять доступ
+            // localStorage.removeItem('users_access_granted');
+        });
+
+        // Добавляем стиль для анимации shake, если его нет
+        const style = document.createElement('style');
+        style.textContent = `
+            .shake {
+                animation: shake 0.5s ease-in-out;
+            }
+
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание пользователя | Управление пользователями</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+            background: #f8f9fa;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: #a0aec0;
+            font-size: 1.2em;
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+            color: #2d3748;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input:hover {
+            border-color: #cbd5e0;
+        }
+
+        input::placeholder {
+            color: #cbd5e0;
+            font-style: italic;
+        }
+
+        .hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.85em;
+            color: #718096;
+            padding-left: 45px;
+        }
+
+        .age-range {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: #718096;
+        }
+
+        .age-range span {
+            background: #edf2f7;
+            padding: 2px 10px;
+            border-radius: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            animation: fadeIn 0.5s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            border-left: 4px solid #48bb78;
+            color: #22543d;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            border-left: 4px solid #f56565;
+            color: #742a2a;
+        }
+
+        .alert-icon {
+            font-size: 1.5em;
+        }
+
+        .user-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 2px dashed #e2e8f0;
+            animation: fadeIn 0.5s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        .preview-title {
+            font-size: 0.9em;
+            color: #718096;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .preview-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .preview-age {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .preview-badge {
+            background: #e2e8f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #4a5568;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .form-container {
+                padding: 30px 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👤 Создание пользователя</h1>
+            <p>Добавьте нового участника в систему</p>
+        </div>
+
+        <div class="form-container">
+            {% if message %}
+            <div class="alert alert-success">
+                <span class="alert-icon">✅</span>
+                <span>{{ message }}</span>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-error">
+                <span class="alert-icon">❌</span>
+                <span>{{ error }}</span>
+            </div>
+            {% endif %}
+
+            <form action="/create" method="POST" id="userForm">
+                <div class="form-group">
+                    <label for="name">
+                        <span>Имя пользователя</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Введите полное имя"
+                            required
+                            minlength="2"
+                            maxlength="50"
+                            pattern="[A-Za-zА-Яа-я\s]+"
+                            title="Только буквы и пробелы"
+                            oninput="updatePreview()"
+                        >
+                    </div>
+                    <span class="hint">Минимум 2 символа, только буквы</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">
+                        <span>Возраст</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🎂</span>
+                        <input
+                            type="number"
+                            id="age"
+                            name="age"
+                            placeholder="Введите возраст"
+                            required
+                            min="1"
+                            max="120"
+                            step="1"
+                            oninput="updatePreview()"
+                        >
+                    </div>
+                    <div class="age-range">
+                        <span>👶 1-17</span>
+                        <span>🧑 18-30</span>
+                        <span>👨 31-50</span>
+                        <span>👴 51-120</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span>➕</span>
+                        <span>Создать</span>
+                    </button>
+                    <button type="reset" class="btn btn-secondary" onclick="resetPreview()">
+                        <span>🔄</span>
+                        <span>Очистить</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="user-preview" id="preview">
+                <div class="preview-title">
+                    <span>👁️</span>
+                    <span>Предпросмотр</span>
+                </div>
+                <div class="preview-card">
+                    <div class="preview-avatar" id="previewAvatar">?</div>
+                    <div class="preview-info">
+                        <div class="preview-name" id="previewName">Имя пользователя</div>
+                        <div class="preview-age" id="previewAge">Возраст: — лет</div>
+                    </div>
+                    <div class="preview-badge" id="previewCategory">новый</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+
+            // Обновляем имя
+            document.getElementById('previewName').textContent = name || 'Имя пользователя';
+
+            // Обновляем аватар
+            const avatar = document.getElementById('previewAvatar');
+            avatar.textContent = name ? name.charAt(0).toUpperCase() : '?';
+
+            // Обновляем возраст
+            const previewAge = document.getElementById('previewAge');
+            if (age) {
+                previewAge.textContent = `Возраст: ${age} ${getAgeWord(age)}`;
+
+                // Обновляем категорию
+                const category = document.getElementById('previewCategory');
+                if (age < 18) {
+                    category.textContent = 'молодой специалист';
+                    category.style.background = '#9f7aea';
+                    category.style.color = 'white';
+                } else if (age < 30) {
+                    category.textContent = 'начинающий';
+                    category.style.background = '#4299e1';
+                    category.style.color = 'white';
+                } else if (age < 50) {
+                    category.textContent = 'опытный';
+                    category.style.background = '#48bb78';
+                    category.style.color = 'white';
+                } else {
+                    category.textContent = 'эксперт';
+                    category.style.background = '#ed8936';
+                    category.style.color = 'white';
+                }
+            } else {
+                previewAge.textContent = 'Возраст: — лет';
+                const category = document.getElementById('previewCategory');
+                category.textContent = 'новый';
+                category.style.background = '#e2e8f0';
+                category.style.color = '#4a5568';
+            }
+        }
+
+        function getAgeWord(age) {
+            age = Number(age);
+            if (age % 10 === 1 && age % 100 !== 11) {
+                return 'год';
+            } else if ([2, 3, 4].includes(age % 10) && ![12, 13, 14].includes(age % 100)) {
+                return 'года';
+            } else {
+                return 'лет';
+            }
+        }
+
+        function resetPreview() {
+            document.getElementById('previewName').textContent = 'Имя пользователя';
+            document.getElementById('previewAvatar').textContent = '?';
+            document.getElementById('previewAge').textContent = 'Возраст: — лет';
+            const category = document.getElementById('previewCategory');
+            category.textContent = 'новый';
+            category.style.background = '#e2e8f0';
+            category.style.color = '#4a5568';
+        }
+
+        // Валидация формы перед отправкой
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            const name = document.getElementById('name').value.trim();
+            const age = document.getElementById('age').value;
+
+            if (name.length < 2) {
+                e.preventDefault();
+                alert('Имя должно содержать минимум 2 символа');
+                return;
+            }
+
+            if (age < 1 || age > 120) {
+                e.preventDefault();
+                alert('Возраст должен быть от 1 до 120 лет');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
