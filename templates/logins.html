@@ -1,10 +1,856 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в Главу Python 🐍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Анимированный фон с Python-элементами */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0.05) 0px,
+                rgba(255,255,255,0.05) 20px,
+                rgba(255,255,255,0.02) 20px,
+                rgba(255,255,255,0.02) 40px
+            );
+            animation: snakeMove 20s linear infinite;
+        }
+
+        @keyframes snakeMove {
+            0% {
+                transform: translate(-10%, -10%) rotate(0deg);
+            }
+            100% {
+                transform: translate(10%, 10%) rotate(10deg);
+            }
+        }
+
+        /* Плавающие элементы Python */
+        .floating-python {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.1;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        .python-1 { top: 10%; left: 5%; animation-delay: 0s; }
+        .python-2 { top: 70%; right: 8%; animation-delay: 1s; }
+        .python-3 { bottom: 15%; left: 15%; animation-delay: 2s; }
+        .python-4 { top: 40%; right: 20%; animation-delay: 3s; }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.8s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Логотип с Python */
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .python-logo {
+            font-size: 70px;
+            line-height: 1;
+            filter: drop-shadow(0 10px 20px rgba(102, 126, 234, 0.3));
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 36px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        /* Приветственное сообщение */
+        .welcome-message {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .welcome-message h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .welcome-message p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Форма входа */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .input-icon input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e1e1e1;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-icon input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-icon input:focus + i {
+            color: #667eea;
+        }
+
+        .input-icon input::placeholder {
+            color: #bbb;
+            font-size: 14px;
+        }
+
+        /* Валидация в реальном времени */
+        .validation-hint {
+            font-size: 12px;
+            margin-top: 5px;
+            padding-left: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .validation-hint.valid {
+            color: #28a745;
+        }
+
+        .validation-hint.invalid {
+            color: #dc3545;
+        }
+
+        .validation-hint i {
+            margin-right: 5px;
+            font-size: 12px;
+        }
+
+        /* Требования к полям */
+        .requirements {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .requirements-title {
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .requirements-list {
+            list-style: none;
+        }
+
+        .requirements-list li {
+            color: #888;
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 12px;
+        }
+
+        .requirements-list li:before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: #667eea;
+        }
+
+        /* Кнопка входа */
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #a8b3e0 0%, #b19cd9 100%);
+        }
+
+        /* Эффект пульсации для кнопки */
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .login-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        /* Индикатор загрузки */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Тестовые данные */
+        .test-credentials {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #ccc;
+        }
+
+        .test-credentials h4 {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .test-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Информация о пользователе */
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #e7f3ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .info-box i {
+            font-size: 16px;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .test-buttons {
+                flex-direction: column;
+            }
+
+            .python-logo {
+                font-size: 50px;
+            }
+
+            .logo h1 {
+                font-size: 28px;
+            }
+        }
+
+        /* Анимация появления ошибок */
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(5px);
+            }
+        }
+
+        /* Снеки и конфетти при успехе (для демонстрации) */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f0f0;
+            opacity: 0;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+    </style>
 </head>
 <body>
+    <!-- Плавающие элементы Python -->
+    <div class="floating-python python-1">🐍</div>
+    <div class="floating-python python-2">💻</div>
+    <div class="floating-python python-3">📚</div>
+    <div class="floating-python python-4">⚡</div>
 
+    <div class="login-container">
+        <!-- Логотип -->
+        <div class="logo">
+            <div class="python-logo">🐍</div>
+            <h1>Глава Python</h1>
+            <p>Войди и начни учиться!</p>
+        </div>
+
+        <!-- Приветственное сообщение -->
+        <div class="welcome-message">
+            <h3>👋 Добро пожаловать!</h3>
+            <p>Введите свои данные, чтобы получить доступ к урокам</p>
+        </div>
+
+        <!-- Форма входа -->
+        <form id="loginForm" action="/logs" method="GET">
+            <div class="form-group">
+                <label for="name">
+                    <span>👤 Имя пользователя</span>
+                </label>
+                <div class="input-icon">
+                    <i>👤</i>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Введите ваше имя"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+                <div class="validation-hint" id="nameHint">
+                    <i>ℹ️</i> От 2 до 50 символов, только буквы
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">
+                    <span>📅 Возраст</span>
+                </label>
+                <div class="input-icon">
+                    <i>📅</i>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        placeholder="Введите ваш возраст"
+                        min="0"
+                        max="150"
+                        step="1"
+                        required
+                    >
+                </div>
+                <div class="validation-hint" id="ageHint">
+                    <i>ℹ️</i> От 0 до 150 лет, целое число
+                </div>
+            </div>
+
+            <!-- Требования к полям -->
+            <div class="requirements">
+                <div class="requirements-title">
+                    <span>📋</span> Требования для входа:
+                </div>
+                <ul class="requirements-list">
+                    <li>Имя: только буквы, пробелы и дефисы</li>
+                    <li>Имя: длина от 2 до 50 символов</li>
+                    <li>Возраст: целое число от 0 до 150</li>
+                    <li>Все поля должны быть заполнены</li>
+                </ul>
+            </div>
+
+            <button type="submit" class="login-btn" id="submitBtn">
+                <span class="btn-text">🚀 Войти в Главу Python</span>
+            </button>
+        </form>
+
+        <!-- Тестовые данные для быстрого входа -->
+        <div class="test-credentials">
+            <h4>
+                <span>🔑</span> Тестовые аккаунты:
+            </h4>
+            <div class="test-buttons">
+                <button class="test-btn" onclick="fillTestData('Анна', 25)">
+                    👩 Анна (25)
+                </button>
+                <button class="test-btn" onclick="fillTestData('Иван', 30)">
+                    👨 Иван (30)
+                </button>
+                <button class="test-btn" onclick="fillTestData('Миша', 15)">
+                    👦 Миша (15)
+                </button>
+            </div>
+        </div>
+
+        <!-- Информационное сообщение -->
+        <div class="info-box">
+            <i>ℹ️</i>
+            <span>Данные проверяются на сервере. Если данные некорректны, вы увидите страницу с ошибкой.</span>
+        </div>
+    </div>
+
+    <script>
+        // Функция для заполнения тестовых данных
+        function fillTestData(name, age) {
+            document.getElementById('name').value = name;
+            document.getElementById('age').value = age;
+            validateForm();
+        }
+
+        // Функция валидации имени
+        function validateName(name) {
+            const hint = document.getElementById('nameHint');
+
+            if (!name || name.trim() === '') {
+                hint.innerHTML = '<i>❌</i> Имя не может быть пустым';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            if (name.length < 2) {
+                hint.innerHTML = '<i>❌</i> Имя должно содержать минимум 2 символа';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            if (name.length > 50) {
+                hint.innerHTML = '<i>❌</i> Имя должно содержать максимум 50 символов';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            // Разрешены буквы (русские и английские), пробелы и дефисы
+            const nameRegex = /^[a-zA-Zа-яА-Я\s-]+$/;
+            if (!nameRegex.test(name)) {
+                hint.innerHTML = '<i>❌</i> Имя может содержать только буквы, пробелы и дефисы';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            hint.innerHTML = '<i>✅</i> Имя корректно';
+            hint.className = 'validation-hint valid';
+            return true;
+        }
+
+        // Функция валидации возраста
+        function validateAge(age) {
+            const hint = document.getElementById('ageHint');
+
+            if (age === '' || age === null || age === undefined) {
+                hint.innerHTML = '<i>❌</i> Возраст не может быть пустым';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            const ageNum = Number(age);
+
+            if (isNaN(ageNum)) {
+                hint.innerHTML = '<i>❌</i> Возраст должен быть числом';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            if (!Number.isInteger(ageNum)) {
+                hint.innerHTML = '<i>❌</i> Возраст должен быть целым числом';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            if (ageNum < 0) {
+                hint.innerHTML = '<i>❌</i> Возраст не может быть отрицательным';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            if (ageNum > 150) {
+                hint.innerHTML = '<i>❌</i> Возраст не может быть больше 150 лет';
+                hint.className = 'validation-hint invalid';
+                return false;
+            }
+
+            hint.innerHTML = '<i>✅</i> Возраст корректен';
+            hint.className = 'validation-hint valid';
+            return true;
+        }
+
+        // Функция валидации всей формы
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const submitBtn = document.getElementById('submitBtn');
+
+            const isNameValid = validateName(name);
+            const isAgeValid = validateAge(age);
+
+            submitBtn.disabled = !(isNameValid && isAgeValid);
+
+            return isNameValid && isAgeValid;
+        }
+
+        // Обработчики событий для валидации в реальном времени
+        document.getElementById('name').addEventListener('input', function(e) {
+            validateForm();
+
+            // Добавляем класс для анимации при ошибке
+            if (!validateName(e.target.value)) {
+                e.target.classList.add('shake');
+                setTimeout(() => {
+                    e.target.classList.remove('shake');
+                }, 500);
+            }
+        });
+
+        document.getElementById('age').addEventListener('input', function(e) {
+            validateForm();
+
+            // Добавляем класс для анимации при ошибке
+            if (!validateAge(e.target.value)) {
+                e.target.classList.add('shake');
+                setTimeout(() => {
+                    e.target.classList.remove('shake');
+                }, 500);
+            }
+        });
+
+        // Обработка отправки формы
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+
+            // Показываем загрузку
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="loading-spinner"></span> Вход...';
+
+            // Добавляем небольшую задержку для демонстрации загрузки
+            setTimeout(() => {
+                // Отправляем форму
+                this.submit();
+            }, 500);
+        });
+
+        // Валидация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            validateForm();
+
+            // Фокусируемся на поле имени
+            document.getElementById('name').focus();
+        });
+
+        // Защита от ввода некорректных символов в поле возраста
+        document.getElementById('age').addEventListener('keydown', function(e) {
+            // Разрешаем: backspace, delete, tab, escape, enter, стрелки, Home, End
+            if ([46, 8, 9, 27, 13, 110, 190].includes(e.keyCode) ||
+                // Разрешаем Ctrl+A
+                (e.keyCode === 65 && e.ctrlKey === true) ||
+                // Разрешаем home, end, влево, вправо
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                return;
+            }
+
+            // Запрещаем всё кроме цифр
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
+                (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+        // Предупреждение при попытке уйти со страницы с незаполненной формой
+        window.addEventListener('beforeunload', function(e) {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+
+            if (name || age) {
+                // Только если что-то введено
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Эффекты наведения для кнопки
+        const loginBtn = document.getElementById('submitBtn');
+
+        loginBtn.addEventListener('mouseenter', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-3px)';
+            }
+        });
+
+        loginBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+
+        // Сохранение данных в localStorage (для удобства)
+        function saveUserData(name, age) {
+            localStorage.setItem('last_name', name);
+            localStorage.setItem('last_age', age);
+        }
+
+        // Восстановление последних данных
+        function loadLastUserData() {
+            const lastName = localStorage.getItem('last_name');
+            const lastAge = localStorage.getItem('last_age');
+
+            if (lastName) {
+                document.getElementById('name').value = lastName;
+            }
+
+            if (lastAge) {
+                document.getElementById('age').value = lastAge;
+            }
+
+            validateForm();
+        }
+
+        // Загружаем последние данные
+        loadLastUserData();
+
+        // Сохраняем данные при успешной отправке
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            saveUserData(name, age);
+        });
+
+        // Добавляем подсказки для демонстрации правильных форматов
+        const nameInput = document.getElementById('name');
+        const ageInput = document.getElementById('age');
+
+        // Подсветка границ при фокусе
+        nameInput.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+
+        nameInput.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+
+        ageInput.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+        });
+
+        ageInput.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+
+        // Функция для очистки формы
+        function clearForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('age').value = '';
+            validateForm();
+        }
+
+        // Добавляем обработчик для клавиши Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (confirm('Очистить форму?')) {
+                    clearForm();
+                }
+            }
+        });
+
+        // Двойной клик по логотипу для быстрого входа (демо)
+        document.querySelector('.python-logo').addEventListener('dblclick', function() {
+            fillTestData('Демо Пользователь', 25);
+        });
+    </script>
 </body>
 </html>
